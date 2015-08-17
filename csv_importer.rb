@@ -19,7 +19,6 @@ csv_parser = CsvParser.new(check_arguments)
 raw_student_rows = csv_parser.parse_file
 
 # Create the Hash containing all the Students, with their database id as key
-
 student_hash_creator = StudentHashCreator.new(raw_student_rows)
 student_hash = student_hash_creator.create_student_hash
 
