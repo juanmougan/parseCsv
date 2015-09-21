@@ -1,4 +1,4 @@
-class Student
+class RawStudent
   attr_accessor :id, :first_name, :last_name, :file_number, :career, :subjects
 
   def initialize(id, first_name, last_name, file_number, career, subjects)
