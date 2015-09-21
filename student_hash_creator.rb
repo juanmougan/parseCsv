@@ -1,6 +1,6 @@
 require 'set'
 require_relative 'model/career'
-require_relative 'model/student'
+require_relative 'model/raw_student'
 require_relative 'model/student_row'
 require_relative 'model/subject'
 
@@ -25,8 +25,8 @@ class StudentHashCreator
       first_name = value[0].first_name
       last_name = value[0].last_name
       file_number = value[0].file_number
-      # TODO cambiar este nil por la Careerv del Student. Ver https://trello.com/c/ragymaPz
-      studentsHash[key] = Student.new(key, first_name, last_name, file_number, nil, subjectsForThisStudent)
+      # TODO cambiar este nil por la Career del Student. Ver https://trello.com/c/ragymaPz y https://github.com/juanmougan/backend/issues/1
+      studentsHash[key] = RawStudent.new(key, first_name, last_name, file_number, nil, subjectsForThisStudent)
       
     end
 
