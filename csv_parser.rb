@@ -9,10 +9,23 @@ class CsvParser
 
 	def parse_file
 		rawStudentRows = []
-		CSV.foreach(File.path(@file_path), {:headers => true}) do |col|
-    		# Where col corresponds to a zero-based value/column in the csv
-    		rawStudentRows << StudentRow.new(Integer(col[0]), col[1], col[2], col[3], col[4], col[5], col[6])
+		CSV.foreach(File.path(@file_path), {:headers => true}) do |row|
+    		rawStudentRows << StudentRow.new(Integer(row[0]), parse_full_name_to_first_name(row['NOMBRE']), 
+    			parse_full_name_to_last_name(row['NOMBRE']), row['LEGAJO'], Integer(row['CARRERA']), row['DESCRIPCION_CARRERA'], 
+    			row['DESCRIPCION_MATERIA'], row['MATERIA'])
 		end
 		return rawStudentRows
+	end
+
+	def parse_full_name_to_array(full_name)
+		full_name.strip.split(",")
+	end
+
+	def parse_full_name_to_first_name(full_name)
+		parse_full_name_to_array(full_name).first
+	end
+
+	def parse_full_name_to_last_name(full_name)
+		parse_full_name_to_array(full_name).last
 	end
 end

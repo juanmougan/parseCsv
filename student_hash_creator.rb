@@ -6,7 +6,8 @@ require_relative 'model/subject'
 
 class StudentHashCreator
   def initialize(rawStudentRows)
-    @filteredList = rawStudentRows.group_by{ |st| st.id  }
+    # Since the CSV has no id, we need to group by a natural key -- the file_number
+    @filteredList = rawStudentRows.group_by{ |st| st.file_number  }
   end
 
   def create_student_hash
@@ -14,7 +15,7 @@ class StudentHashCreator
     @filteredList.map do |key, value| 
       # para cada key (es un ID de Student), traerme las materias. Ponerlas en un Set para no duplicar.
       allSubjects = @filteredList[key].collect {
-        |row| Subject.new(row.subject_name, row.subject_code, row.career)
+        |row| Subject.new(row.subject_name, row.subject_code, row.career_name, row.career_code)
       }
       
       subjectsForThisStudent = Set.new
