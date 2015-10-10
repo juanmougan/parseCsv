@@ -1,7 +1,6 @@
 require 'set'
 require_relative 'model/raw_student'
 require_relative 'model/student_row'
-require_relative 'model/subject'
 
 class StudentHashCreator
   def initialize(rawStudentRows)
@@ -12,10 +11,11 @@ class StudentHashCreator
   def create_student_hash
     studentsHash = Hash.new
     @filteredList.map do |key, value| 
-      # para cada key (es un ID de Student), traerme las materias. Ponerlas en un Set para no duplicar.
-      allSubjects = @filteredList[key].collect {
-        |row| Subject.new(row.subject_name, row.subject_code, row.career_name, row.career_code)
+      # Fetch the *real* Subject by code, use a Set to avoid duplicates
+      allSubjects = @filteredList[key].collect { |row|
+        Subject.find_by code: row.subject_code
       }
+      # TODO insert the Enrollment
       
       subjectsForThisStudent = Set.new
       subjectsForThisStudent.add(allSubjects)
