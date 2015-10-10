@@ -1,8 +1,6 @@
 require 'set'
-require_relative 'model/career'
 require_relative 'model/raw_student'
 require_relative 'model/student_row'
-require_relative 'model/subject'
 
 class StudentHashCreator
   def initialize(rawStudentRows)
@@ -13,10 +11,11 @@ class StudentHashCreator
   def create_student_hash
     studentsHash = Hash.new
     @filteredList.map do |key, value| 
-      # para cada key (es un ID de Student), traerme las materias. Ponerlas en un Set para no duplicar.
-      allSubjects = @filteredList[key].collect {
-        |row| Subject.new(row.subject_name, row.subject_code, row.career_name, row.career_code)
+      # Fetch the *real* Subject by code, use a Set to avoid duplicates
+      allSubjects = @filteredList[key].collect { |row|
+        Subject.find_by code: row.subject_code
       }
+      # TODO insert the Enrollment
       
       subjectsForThisStudent = Set.new
       subjectsForThisStudent.add(allSubjects)
@@ -26,8 +25,9 @@ class StudentHashCreator
       first_name = value[0].first_name
       last_name = value[0].last_name
       file_number = value[0].file_number
-      # TODO cambiar este nil por la Career del Student. Ver https://trello.com/c/ragymaPz y https://github.com/juanmougan/backend/issues/1
-      studentsHash[key] = RawStudent.new(key, first_name, last_name, file_number, nil, subjectsForThisStudent)
+      career_code = value[0].career_code
+      career_name = value[0].career_name
+      studentsHash[key] = RawStudent.new(key, first_name, last_name, file_number, career_code, career_name, subjectsForThisStudent)
       
     end
 

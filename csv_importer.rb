@@ -1,5 +1,3 @@
-require 'pp'
-require_relative 'model/career'
 require_relative 'model/raw_student'
 require_relative 'model/student_row'
 require_relative 'model/subject'
