@@ -22,10 +22,10 @@ class CsvParser
 	end
 
 	def parse_full_name_to_first_name(full_name)
-		parse_full_name_to_array(full_name).first
+		parse_full_name_to_array(full_name).last
 	end
 
 	def parse_full_name_to_last_name(full_name)
-		parse_full_name_to_array(full_name).last
+		parse_full_name_to_array(full_name).first
 	end
 end
