@@ -1,6 +1,7 @@
 require 'set'
 require_relative 'model/raw_student'
 require_relative 'model/student_row'
+require_relative 'model/raw_enrollment'
 
 class StudentHashCreator
   def initialize(rawStudentRows)
@@ -12,7 +13,7 @@ class StudentHashCreator
     students_hash = Hash.new
     @filtered_list.map do |key, value|
 
-      all_subjects = collect_all_subjects_ignoring_nil(key)
+      all_raw_enrollments = collect_all_subjects_ignoring_nil(key, value)
       # If I use this, I get a Set of an Array of Subjects... check this if I want to make sure I have no duplicates
       #subjects_for_this_student = Set.new
       #subjects_for_this_student.add(all_subjects)
@@ -24,17 +25,20 @@ class StudentHashCreator
       file_number = value[0].file_number
       career_code = value[0].career_code
       career_name = value[0].career_name
-      students_hash[key] = RawStudent.new(key, first_name, last_name, file_number, career_code, career_name, all_subjects)
+      students_hash[key] = RawStudent.new(key, first_name, last_name, file_number, career_code, career_name, all_raw_enrollments)
     end
 
     return students_hash
   end
 
   # Fetch the *real* Subject by code
-  def collect_all_subjects_ignoring_nil(key)
-    @filtered_list[key].collect { |row|
+  def collect_all_subjects_ignoring_nil(key, value)
+    @filtered_list[key].collect do |row|
       found_subject = Subject.find_by code: row.subject_code
-    }.compact
+      unless found_subject.nil?
+        RawEnrollment.new(found_subject, row.professorship, row.shift)        
+      end
+    end.compact
   end
 
 end

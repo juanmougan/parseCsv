@@ -1,5 +1,4 @@
 require 'csv'
-require 'pp'
 require_relative 'model/student_row'
 
 class CsvParser
@@ -12,7 +11,7 @@ class CsvParser
 		CSV.foreach(File.path(@file_path), {:headers => true}) do |row|
     		rawStudentRows << StudentRow.new(Integer(row[0]), parse_full_name_to_first_name(row['NOMBRE']), 
     			parse_full_name_to_last_name(row['NOMBRE']), row['LEGAJO'], Integer(row['CARRERA']), row['DESCRIPCION_CARRERA'], 
-    			row['DESCRIPCION_MATERIA'], row['MATERIA'])
+    			row['DESCRIPCION_MATERIA'], row['MATERIA'], row['CATEDRA'], row['TURNO'])
 		end
 		return rawStudentRows
 	end
